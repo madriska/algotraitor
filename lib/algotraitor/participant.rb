@@ -1,9 +1,10 @@
 module Algotraitor
 
   class Participant
-    attr_reader :name, :cash_balance
+    attr_reader :id, :name, :cash_balance
 
-    def initialize(name, cash_balance)
+    def initialize(id, name, cash_balance)
+      @id = id
       @name = name
       @cash_balance = cash_balance
     end

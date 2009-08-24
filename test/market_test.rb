@@ -18,6 +18,12 @@ class MarketTest < Test::Unit::TestCase
     assert_equal stock, @market.stocks[stock.symbol]
   end
 
+  test "participants are indexed by their ID" do
+    participant = Algotraitor::Participant.new(12, "Mr. Blah", 100.00)
+    @market.participants << participant
+    assert_equal participant, @market.participants[participant.id]
+  end
+
   test "Market#stock_prices returns a hash mapping symbols to current prices" do
     @stock.price = 12.34
     assert_equal @stock.price, @market.stock_prices[@stock.symbol]
