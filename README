@@ -1,0 +1,25 @@
+API features
+- sell stock
+- buy stock
+- get your current holdings
+- get price of a particular stock
+- get price of all stocks (dump)
+- see how much money you have
+- see whether or not you are in the lead.
+- get a trade listing timeline?  <- here, I was thinking about providing 100%
+  information 
+[ who, buy/sell, amount, what, price ]
+- access certain market indexes (overall, top n, etc)?
+
+Market characteristics
+- All participants are price takers. Orders execute immediately at the market
+  price.
+- All price movements are simulated by the server. (affected by other players
+  actions)
+- Spontaneous price movements do occur, to simulate activity of hidden players,
+  but the main focus should be player vs. player interaction. Still have to
+  have a significant random component so that one player can't manipulate the
+  overall volatility by injecting or withholding liquidity.
+- Potential black swan events. Crash one stock, etc. Can make this limitlessly
+  complex by adding more events and triggers... simulate algo trades.
+
