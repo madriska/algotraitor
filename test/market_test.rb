@@ -3,6 +3,8 @@ require File.dirname(__FILE__) + '/helper'
 class MarketTest < Test::Unit::TestCase
   setup do
     @market = Algotraitor::Market.new
+    @stock = Algotraitor::Stock.new('ABC', 15.00)
+    @market.stocks << @stock
   end
 
   test "newly initialized market should be empty" do
@@ -15,5 +17,12 @@ class MarketTest < Test::Unit::TestCase
     @market.stocks << stock
     assert_equal stock, @market.stocks[stock.symbol]
   end
+
+  test "Market#stock_prices returns a hash mapping symbols to current prices" do
+    @stock.price = 12.34
+    assert_equal @stock.price, @market.stock_prices[@stock.symbol]
+  end
+
+
 
 end

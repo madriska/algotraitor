@@ -14,6 +14,14 @@ module Algotraitor
       end
     end
 
+    def stock_prices
+      @stocks.inject({}) do |hash, (symbol, stock)|
+        hash[symbol] = stock.price
+        hash
+      end
+    end
+
+
 
   end
 
