@@ -8,6 +8,7 @@ module Algotraitor
     def initialize
       @stocks = {}
       
+      # Automatically index stocks by their symbol
       def @stocks.<<(stock)
         self[stock.symbol] = stock
       end
