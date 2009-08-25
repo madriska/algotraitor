@@ -1,12 +1,47 @@
 require File.dirname(__FILE__) + '/helper'
 
 class ParticipantTest < Test::Unit::TestCase
-  
-  test "initializer accepts an ID, a name and cash balance" do
+
+  test "accepts an ID, a name and cash balance" do
     participant = Algotraitor::Participant.new(123, "Mickey Mouse", 100.00)
     assert_equal 123, participant.id
     assert_equal "Mickey Mouse", participant.name
     assert_equal 100.00, participant.cash_balance
+  end
+  
+  context "#buy, #sell" do
+    setup do
+      @participant = Algotraitor::Participant.new(1, "Mr. Blah", 100.00)
+      @stock = Algotraitor::Stock.new('XYZ', 50.00)
+    end
+
+    test "buy is blocked if participant doesn't have the cash" do
+      assert_raises(Algotraitor::Overdrawn) { @participant.buy(@stock, 5) }
+      assert_nothing_raised { @participant.buy(@stock, 1) }
+    end
+
+    test "sell is blocked if participant doesn't have the stock" do
+      assert_raises(Algotraitor::NoShortSelling) { @participant.sell(@stock, 5) }
+      assert_nothing_raised { 
+        @participant.buy(@stock, 1)
+        @participant.sell(@stock, 1)
+      }
+    end
+
+    test "changes the portfolio and cash balance" do
+      old_quantity = @participant.portfolio[@stock]
+      old_balance = @participant.cash_balance
+      
+      @participant.buy(@stock, 1)
+      
+      assert_equal(@participant.cash_balance, old_balance - @stock.price)
+      assert_equal(@participant.portfolio[@stock], old_quantity + 1)
+
+      @participant.sell(@stock, 1)
+
+      assert_equal(@participant.cash_balance, old_balance)
+      assert_equal(@participant.portfolio[@stock], old_quantity)
+    end
   end
 
 end
