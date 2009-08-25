@@ -1,0 +1,3 @@
+[submodule "vendor/roxy"]
+	path = vendor/roxy
+	url = git://github.com/yfactorial/roxy.git

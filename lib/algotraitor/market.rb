@@ -3,19 +3,33 @@ module Algotraitor
   # A Market represents the current state of a market: a basket of Stocks and
   # their associated information.
   class Market
-    attr_reader :stocks, :participants
+    include Roxy::Moxie
 
     def initialize
-      # Automatically index stocks by their symbol
       @stocks = {}
-      def @stocks.<<(stock)
-        self[stock.symbol] = stock
-      end
-
-      # Index participants by their ID (assigned at startup)
       @participants = {}
-      def @participants.<<(participant)
-        self[participant.id] = participant
+    end
+
+    attr_reader :stocks, :participants
+
+    def add_stock(stock)
+      @stocks[stock.symbol] = stock
+    end
+
+    # Enable market.stocks << stock to index stock by symbol
+    proxy :stocks do
+      def <<(stock)
+        proxy_owner.add_stock(stock)
+      end
+    end
+
+    def add_participant(participant)
+      @participants[participant.id] = participant
+    end
+
+    proxy :participants do
+      def <<(participant)
+        proxy_owner.add_participant(participant)
       end
     end
 
