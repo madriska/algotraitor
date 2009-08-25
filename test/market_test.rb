@@ -42,6 +42,13 @@ class MarketTest < Test::Unit::TestCase
     @stock.price += 1.0
   end
 
+  test "a strategy doesn't have to subscribe to update_stock_price" do
+    strategy = mock
+
+    @market.strategies << strategy
+
+    assert_nothing_raised { @stock.price += 1.0 }
+  end
 
 
 end

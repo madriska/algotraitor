@@ -28,7 +28,9 @@ module Algotraitor
     # Called when a stock price is updated.
     def update(stock, time, old_price, new_price)
       @strategies.each do |strategy|
-        strategy.update_stock_price(stock, time, old_price, new_price)
+        if strategy.respond_to?(:update_stock_price)
+          strategy.update_stock_price(stock, time, old_price, new_price)
+        end
       end
     end
 
