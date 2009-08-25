@@ -35,12 +35,26 @@ module Algotraitor
     end
 
     def add_participant(participant)
+      participant.add_observer(ObserverProxy.new(self, 
+                                                 :performed_participant_trade))
       @participants[participant.id] = participant
     end
 
     proxy :participants do
       def <<(participant)
         proxy_owner.add_participant(participant)
+      end
+    end
+
+    # Called to notify the Market when a market participant performs a trade.
+    # +price+ is the (nonnegative) purchase or sale price at which the trade
+    # executed. +qty+ is the quantity *purchased* (i.e., negative for sells).
+    def performed_participant_trade(participant, time, price, qty)
+      @strategies.each do |strategy|
+        if strategy.respond_to?(:performed_participant_trade)
+          strategy.performed_participant_trade(participant, time,
+                                               price, qty)
+        end
       end
     end
 

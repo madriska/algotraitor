@@ -16,12 +16,12 @@ class ParticipantTest < Test::Unit::TestCase
     end
 
     test "buy is blocked if participant doesn't have the cash" do
-      assert_raises(Algotraitor::Overdrawn) { @participant.buy(@stock, 5) }
+      assert_raises(Algotraitor::Overdrawn) { @participant.buy(@stock, 50) }
       assert_nothing_raised { @participant.buy(@stock, 1) }
     end
 
     test "sell is blocked if participant doesn't have the stock" do
-      assert_raises(Algotraitor::NoShortSelling) { @participant.sell(@stock, 5) }
+      assert_raises(Algotraitor::NoShortSelling) { @participant.sell(@stock, 50) }
       assert_nothing_raised { 
         @participant.buy(@stock, 1)
         @participant.sell(@stock, 1)
@@ -41,6 +41,35 @@ class ParticipantTest < Test::Unit::TestCase
 
       assert_equal(@participant.cash_balance, old_balance)
       assert_equal(@participant.portfolio[@stock], old_quantity)
+    end
+
+    test "notifies subscribers of buys" do
+      watcher = mock
+      watcher.expects(:update).with do |participant, time, price, qty|
+        participant == @participant &&
+          price == @stock.price &&
+          qty == 2
+      end
+
+      @participant.add_observer(watcher)
+      @participant.buy(@stock, 2)
+      @participant.delete_observer(watcher)
+    end
+
+    test "notifies subscribers of sells" do
+      watcher = mock
+      watcher.expects(:update).with do |participant, time, price, qty|
+        participant == @participant &&
+          price == @stock.price &&
+          qty == -2
+      end
+
+      # make sure we have the stock to sell first
+      @participant.buy(@stock, 2)
+
+      @participant.add_observer(watcher)
+      @participant.sell(@stock, 2)
+      @participant.delete_observer(watcher)
     end
   end
 
