@@ -14,7 +14,7 @@ module Algotraitor
     attr_reader :stocks, :participants, :strategies
 
     def add_stock(stock)
-      stock.add_observer(self)
+      stock.add_observer(ObserverProxy.new(self, :update_stock_price))
       @stocks[stock.symbol] = stock
     end
 
@@ -26,7 +26,7 @@ module Algotraitor
     end
 
     # Called when a stock price is updated.
-    def update(stock, time, old_price, new_price)
+    def update_stock_price(stock, time, old_price, new_price)
       @strategies.each do |strategy|
         if strategy.respond_to?(:update_stock_price)
           strategy.update_stock_price(stock, time, old_price, new_price)

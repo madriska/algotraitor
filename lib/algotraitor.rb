@@ -3,6 +3,7 @@ Dir['vendor/*'].each do |dir|
 end
 
 require 'roxy'
+require 'observer_proxy'
 
 require 'algotraitor/stock'
 require 'algotraitor/market'
