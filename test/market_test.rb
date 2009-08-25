@@ -29,6 +29,19 @@ class MarketTest < Test::Unit::TestCase
     assert_equal @stock.price, @market.stock_prices[@stock.symbol]
   end
 
+  test "Plugging a Strategy into a market informs it of price changes" do
+    strategy = mock
+    strategy.expects(:update_stock_price).with {
+      |stock, time, old_price, new_price|
+      stock == @stock &&
+        new_price == old_price + 1.0
+    }
+
+    @market.strategies << strategy
+
+    @stock.price += 1.0
+  end
+
 
 
 end

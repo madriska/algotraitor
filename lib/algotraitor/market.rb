@@ -3,14 +3,15 @@ module Algotraitor
   # A Market represents the current state of a market: a basket of Stocks and
   # their associated information.
   class Market
-    include Roxy::Moxie
+    include Roxy::Moxie # proxy love
 
     def initialize
       @stocks = {}
       @participants = {}
+      @strategies = []
     end
 
-    attr_reader :stocks, :participants
+    attr_reader :stocks, :participants, :strategies
 
     def add_stock(stock)
       stock.add_observer(self)
@@ -24,13 +25,15 @@ module Algotraitor
       end
     end
 
-    def add_participant(participant)
-      @participants[participant.id] = participant
-    end
-
     # Called when a stock price is updated.
     def update(stock, time, old_price, new_price)
-      # TODO
+      @strategies.each do |strategy|
+        strategy.update_stock_price(stock, time, old_price, new_price)
+      end
+    end
+
+    def add_participant(participant)
+      @participants[participant.id] = participant
     end
 
     proxy :participants do
