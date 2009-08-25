@@ -13,6 +13,7 @@ module Algotraitor
     attr_reader :stocks, :participants
 
     def add_stock(stock)
+      stock.add_observer(self)
       @stocks[stock.symbol] = stock
     end
 
@@ -25,6 +26,11 @@ module Algotraitor
 
     def add_participant(participant)
       @participants[participant.id] = participant
+    end
+
+    # Called when a stock price is updated.
+    def update(stock, time, old_price, new_price)
+      # TODO
     end
 
     proxy :participants do
