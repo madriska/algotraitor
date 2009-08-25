@@ -1,3 +1,5 @@
+require 'thread'
+
 module Algotraitor
   Overdrawn = Class.new(StandardError)
   NoShortSelling = Class.new(StandardError)
@@ -10,6 +12,7 @@ module Algotraitor
       @name = name
       @cash_balance = cash_balance
       @portfolio = Hash.new(0)
+      @mutex = Mutex.new
     end
 
     attr_reader :id, :name, :cash_balance, :portfolio
@@ -20,10 +23,13 @@ module Algotraitor
       raise Overdrawn if purchase_price > @cash_balance
       
       if quantity > 0
+        @mutex.synchronize do
+          @cash_balance -= purchase_price
+          @portfolio[stock] += quantity
+        end
+
         changed
         notify_observers(self, Time.now, stock.price, quantity)
-        @cash_balance -= purchase_price
-        @portfolio[stock] += quantity
       end
     end
 
@@ -33,10 +39,13 @@ module Algotraitor
       raise NoShortSelling if @portfolio[stock] < quantity
 
       if quantity > 0
+        @mutex.synchronize do
+          @portfolio[stock] -= quantity
+          @cash_balance += sale_price
+        end
+
         changed
         notify_observers(self, Time.now, stock.price, -quantity)
-        @portfolio[stock] -= quantity
-        @cash_balance += sale_price
       end
     end
 
