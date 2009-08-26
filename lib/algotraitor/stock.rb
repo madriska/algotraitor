@@ -24,7 +24,7 @@ module Algotraitor
     def price=(new_price)
       if @price != new_price
         changed
-        notify_observers(self, Time.now, @price, new_price)
+        notify_observers(self, Algotraitor.timestamp, @price, new_price)
       end
       @price = new_price
     end

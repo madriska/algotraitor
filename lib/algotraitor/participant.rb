@@ -28,17 +28,21 @@ module Algotraitor
       raise ArgumentError, "Quantity must be nonnegative" if quantity < 0
       raise Overdrawn if purchase_price > @cash_balance
       
+      executed_at = nil
       if quantity > 0
         @mutex.synchronize do
+          # Serialize the assignment to executed_at so the history is consistent
+          executed_at = Algotraitor.timestamp
           @cash_balance -= purchase_price
           @portfolio[stock] += quantity
         end
 
         changed
-        notify_observers(self, Time.now, stock.price, quantity)
+        notify_observers(self, executed_at, stock.price, quantity)
       end
 
-      execution_price
+      {:price_per_share => execution_price,
+       :executed_at     => executed_at}
     end
 
     def sell(stock, quantity)
@@ -47,17 +51,21 @@ module Algotraitor
       raise ArgumentError, "Quantity must be nonnegative" if quantity < 0
       raise NoShortSelling if @portfolio[stock] < quantity
 
+      executed_at = nil
       if quantity > 0
         @mutex.synchronize do
+          # Serialize the assignment to executed_at so the history is consistent
+          executed_at = Algotraitor.timestamp
           @portfolio[stock] -= quantity
           @cash_balance += sale_price
         end
 
         changed
-        notify_observers(self, Time.now, stock.price, -quantity)
+        notify_observers(self, executed_at, stock.price, -quantity)
       end
 
-      execution_price
+      {:price_per_share => execution_price,
+       :executed_at     => executed_at}
     end
 
   end
