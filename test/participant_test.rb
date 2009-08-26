@@ -32,13 +32,16 @@ class ParticipantTest < Test::Unit::TestCase
       old_quantity = @participant.portfolio[@stock]
       old_balance = @participant.cash_balance
       
-      @participant.buy(@stock, 1)
+      result = @participant.buy(@stock, 1)
       
+      # buy and sell return the execution price of the trade
+      assert_equal(result, @stock.price)
       assert_equal(@participant.cash_balance, old_balance - @stock.price)
       assert_equal(@participant.portfolio[@stock], old_quantity + 1)
 
-      @participant.sell(@stock, 1)
+      result = @participant.sell(@stock, 1)
 
+      assert_equal(result, @stock.price)
       assert_equal(@participant.cash_balance, old_balance)
       assert_equal(@participant.portfolio[@stock], old_quantity)
     end

@@ -23,7 +23,8 @@ module Algotraitor
     end
 
     def buy(stock, quantity)
-      purchase_price = stock.price * quantity
+      execution_price = stock.price
+      purchase_price = execution_price * quantity
       raise ArgumentError, "Quantity must be nonnegative" if quantity < 0
       raise Overdrawn if purchase_price > @cash_balance
       
@@ -36,10 +37,13 @@ module Algotraitor
         changed
         notify_observers(self, Time.now, stock.price, quantity)
       end
+
+      execution_price
     end
 
     def sell(stock, quantity)
-      sale_price = stock.price * quantity
+      execution_price = stock.price
+      sale_price = execution_price * quantity
       raise ArgumentError, "Quantity must be nonnegative" if quantity < 0
       raise NoShortSelling if @portfolio[stock] < quantity
 
@@ -52,6 +56,8 @@ module Algotraitor
         changed
         notify_observers(self, Time.now, stock.price, -quantity)
       end
+
+      execution_price
     end
 
   end
