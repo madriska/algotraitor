@@ -38,7 +38,11 @@ module Algotraitor
         end
 
         changed
-        notify_observers(self, stock, executed_at, stock.price, quantity)
+        notify_observers(:participant => self, 
+                         :stock => stock, 
+                         :time => executed_at, 
+                         :price => stock.price, 
+                         :quantity => quantity)
       end
 
       {:price_per_share => execution_price,
@@ -61,7 +65,11 @@ module Algotraitor
         end
 
         changed
-        notify_observers(self, stock, executed_at, stock.price, -quantity)
+        notify_observers(:participant => self, 
+                         :stock => stock, 
+                         :time => executed_at, 
+                         :price => stock.price, 
+                         :quantity => -quantity)
       end
 
       {:price_per_share => execution_price,

@@ -48,11 +48,11 @@ class ParticipantTest < Test::Unit::TestCase
 
     test "notifies subscribers of buys" do
       watcher = mock
-      watcher.expects(:update).with do |participant, stock, time, price, qty|
-        participant == @participant &&
-          stock.symbol == @stock.symbol &&
-          price == @stock.price &&
-          qty == 2
+      watcher.expects(:update).with do |options|
+        options[:participant] == @participant &&
+          options[:stock].symbol == @stock.symbol &&
+          options[:price] == @stock.price &&
+          options[:quantity] == 2
       end
 
       @participant.add_observer(watcher)
@@ -62,11 +62,11 @@ class ParticipantTest < Test::Unit::TestCase
 
     test "notifies subscribers of sells" do
       watcher = mock
-      watcher.expects(:update).with do |participant, stock, time, price, qty|
-        participant == @participant &&
-          stock.symbol == @stock.symbol &&
-          price == @stock.price &&
-          qty == -2
+      watcher.expects(:update).with do |options|
+        options[:participant] == @participant &&
+          options[:stock].symbol == @stock.symbol &&
+          options[:price] == @stock.price &&
+          options[:quantity] == -2
       end
 
       # make sure we have the stock to sell first

@@ -13,9 +13,9 @@ class StockTest < Test::Unit::TestCase
 
   test "notifies subscribers when price changes" do
     watcher = mock
-    watcher.expects(:update).with do |stock, time, old_price, new_price|
-      stock.symbol == 'XYZ' &&
-        new_price = old_price + 1.0
+    watcher.expects(:update).with do |options|
+      options[:stock].symbol == 'XYZ' &&
+        options[:new_price] = options[:old_price] + 1.0
     end
 
     @stock.add_observer(watcher)

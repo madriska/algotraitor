@@ -30,10 +30,10 @@ module Algotraitor
     end
 
     # Called when a stock price is updated.
-    def update_stock_price(stock, time, old_price, new_price)
+    def update_stock_price(options)
       @strategies.each do |strategy|
         if strategy.respond_to?(:update_stock_price)
-          strategy.update_stock_price(stock, time, old_price, new_price)
+          strategy.update_stock_price(options)
         end
       end
     end
@@ -53,11 +53,10 @@ module Algotraitor
     # Called to notify the Market when a market participant performs a trade.
     # +price+ is the (nonnegative) purchase or sale price at which the trade
     # executed. +qty+ is the quantity *purchased* (i.e., negative for sells).
-    def performed_participant_trade(participant, stock, time, price, qty)
+    def performed_participant_trade(options)
       @strategies.each do |strategy|
         if strategy.respond_to?(:performed_participant_trade)
-          strategy.performed_participant_trade(participant, stock, time,
-                                               price, qty)
+          strategy.performed_participant_trade(options)
         end
       end
     end

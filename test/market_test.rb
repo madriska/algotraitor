@@ -36,10 +36,9 @@ class MarketTest < Test::Unit::TestCase
 
   test "Plugging a Strategy into a market informs it of price changes" do
     strategy = mock
-    strategy.expects(:update_stock_price).with do
-      |stock, time, old_price, new_price|
-      stock == @stock &&
-        new_price == old_price + 1.0
+    strategy.expects(:update_stock_price).with do |options|
+      options[:stock] == @stock &&
+        options[:new_price] == options[:old_price] + 1.0
     end
     @market.strategies << strategy
 
@@ -54,11 +53,11 @@ class MarketTest < Test::Unit::TestCase
 
   test "Strategies plugged into the market are informed of buys" do
     strategy = mock
-    strategy.expects(:performed_participant_trade).with do |p, stock, time, price, qty|
-      p == @participant &&
-        stock.symbol == @stock.symbol &&
-        price == @stock.price &&
-        qty == 2
+    strategy.expects(:performed_participant_trade).with do |options|
+      options[:participant] == @participant &&
+        options[:stock].symbol == @stock.symbol &&
+        options[:price] == @stock.price &&
+        options[:quantity] == 2
     end
     @market.strategies << strategy
 
