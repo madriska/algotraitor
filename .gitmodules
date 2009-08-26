@@ -1,3 +1,6 @@
 [submodule "vendor/roxy"]
 	path = vendor/roxy
 	url = git://github.com/yfactorial/roxy.git
+[submodule "vendor/sinatra"]
+	path = vendor/sinatra
+	url = git://github.com/sinatra/sinatra.git

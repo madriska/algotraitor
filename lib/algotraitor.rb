@@ -8,4 +8,4 @@ require 'observer_proxy'
 require 'algotraitor/stock'
 require 'algotraitor/market'
 require 'algotraitor/participant'
-
+require 'algotraitor/server'

@@ -13,6 +13,10 @@ module Algotraitor
 
     attr_reader :stocks, :participants, :strategies
 
+    def authenticate(id, password)
+      (p = @participants[id.to_i]) && p.valid_password?(password)
+    end
+
     def add_stock(stock)
       stock.add_observer(ObserverProxy.new(self, :update_stock_price))
       @stocks[stock.symbol] = stock

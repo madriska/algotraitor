@@ -17,6 +17,11 @@ module Algotraitor
 
     attr_reader :id, :name, :cash_balance, :portfolio
 
+    # FIXME: bit of a security hole here
+    def valid_password?(password)
+      password == 'kittens'
+    end
+
     def buy(stock, quantity)
       purchase_price = stock.price * quantity
       raise ArgumentError, "Quantity must be nonnegative" if quantity < 0
