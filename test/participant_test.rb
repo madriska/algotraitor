@@ -35,21 +35,22 @@ class ParticipantTest < Test::Unit::TestCase
       result = @participant.buy(@stock, 1)
       
       # buy and sell return the execution price of the trade
-      assert_equal(result, @stock.price)
+      assert_equal(result[:price_per_share], @stock.price)
       assert_equal(@participant.cash_balance, old_balance - @stock.price)
       assert_equal(@participant.portfolio[@stock], old_quantity + 1)
 
       result = @participant.sell(@stock, 1)
 
-      assert_equal(result, @stock.price)
+      assert_equal(result[:price_per_share], @stock.price)
       assert_equal(@participant.cash_balance, old_balance)
       assert_equal(@participant.portfolio[@stock], old_quantity)
     end
 
     test "notifies subscribers of buys" do
       watcher = mock
-      watcher.expects(:update).with do |participant, time, price, qty|
+      watcher.expects(:update).with do |participant, stock, time, price, qty|
         participant == @participant &&
+          stock.symbol == @stock.symbol &&
           price == @stock.price &&
           qty == 2
       end
@@ -61,8 +62,9 @@ class ParticipantTest < Test::Unit::TestCase
 
     test "notifies subscribers of sells" do
       watcher = mock
-      watcher.expects(:update).with do |participant, time, price, qty|
+      watcher.expects(:update).with do |participant, stock, time, price, qty|
         participant == @participant &&
+          stock.symbol == @stock.symbol &&
           price == @stock.price &&
           qty == -2
       end

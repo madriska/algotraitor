@@ -53,10 +53,10 @@ module Algotraitor
     # Called to notify the Market when a market participant performs a trade.
     # +price+ is the (nonnegative) purchase or sale price at which the trade
     # executed. +qty+ is the quantity *purchased* (i.e., negative for sells).
-    def performed_participant_trade(participant, time, price, qty)
+    def performed_participant_trade(participant, stock, time, price, qty)
       @strategies.each do |strategy|
         if strategy.respond_to?(:performed_participant_trade)
-          strategy.performed_participant_trade(participant, time,
+          strategy.performed_participant_trade(participant, stock, time,
                                                price, qty)
         end
       end

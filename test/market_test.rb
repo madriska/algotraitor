@@ -54,8 +54,9 @@ class MarketTest < Test::Unit::TestCase
 
   test "Strategies plugged into the market are informed of buys" do
     strategy = mock
-    strategy.expects(:performed_participant_trade).with do |p, time, price, qty|
+    strategy.expects(:performed_participant_trade).with do |p, stock, time, price, qty|
       p == @participant &&
+        stock.symbol == @stock.symbol &&
         price == @stock.price &&
         qty == 2
     end
