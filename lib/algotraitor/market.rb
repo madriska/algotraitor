@@ -18,7 +18,7 @@ module Algotraitor
     end
 
     def add_stock(stock)
-      stock.add_observer(ObserverProxy.new(self, :update_stock_price))
+      stock.add_observer(self)
       @stocks[stock.symbol] = stock
     end
 
@@ -30,17 +30,16 @@ module Algotraitor
     end
 
     # Called when a stock price is updated.
-    def update_stock_price(options)
+    def after_price_change(options)
       @strategies.each do |strategy|
-        if strategy.respond_to?(:update_stock_price)
-          strategy.update_stock_price(options)
+        if strategy.respond_to?(:after_price_change)
+          strategy.after_price_change(options)
         end
       end
     end
 
     def add_participant(participant)
-      participant.add_observer(ObserverProxy.new(self, 
-                                                 :performed_participant_trade))
+      participant.add_observer(self)
       @participants[participant.id] = participant
     end
 
@@ -51,12 +50,10 @@ module Algotraitor
     end
 
     # Called to notify the Market when a market participant performs a trade.
-    # +price+ is the (nonnegative) purchase or sale price at which the trade
-    # executed. +qty+ is the quantity *purchased* (i.e., negative for sells).
-    def performed_participant_trade(options)
+    def after_trade(options)
       @strategies.each do |strategy|
-        if strategy.respond_to?(:performed_participant_trade)
-          strategy.performed_participant_trade(options)
+        if strategy.respond_to?(:after_trade)
+          strategy.after_trade(options)
         end
       end
     end

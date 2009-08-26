@@ -48,7 +48,7 @@ class ParticipantTest < Test::Unit::TestCase
 
     test "notifies subscribers of buys" do
       watcher = mock
-      watcher.expects(:update).with do |options|
+      watcher.expects(:after_trade).with do |options|
         options[:participant] == @participant &&
           options[:stock].symbol == @stock.symbol &&
           options[:price] == @stock.price &&
@@ -62,7 +62,7 @@ class ParticipantTest < Test::Unit::TestCase
 
     test "notifies subscribers of sells" do
       watcher = mock
-      watcher.expects(:update).with do |options|
+      watcher.expects(:after_trade).with do |options|
         options[:participant] == @participant &&
           options[:stock].symbol == @stock.symbol &&
           options[:price] == @stock.price &&
@@ -76,6 +76,7 @@ class ParticipantTest < Test::Unit::TestCase
       @participant.sell(@stock, 2)
       @participant.delete_observer(watcher)
     end
+
   end
 
 end

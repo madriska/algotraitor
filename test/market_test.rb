@@ -36,7 +36,7 @@ class MarketTest < Test::Unit::TestCase
 
   test "Plugging a Strategy into a market informs it of price changes" do
     strategy = mock
-    strategy.expects(:update_stock_price).with do |options|
+    strategy.expects(:after_price_change).with do |options|
       options[:stock] == @stock &&
         options[:new_price] == options[:old_price] + 1.0
     end
@@ -45,7 +45,7 @@ class MarketTest < Test::Unit::TestCase
     @stock.price += 1.0
   end
 
-  test "a strategy doesn't have to subscribe to update_stock_price" do
+  test "a strategy doesn't have to subscribe to after_price_change" do
     strategy = mock
     @market.strategies << strategy
     assert_nothing_raised { @stock.price += 1.0 }
@@ -53,7 +53,7 @@ class MarketTest < Test::Unit::TestCase
 
   test "Strategies plugged into the market are informed of buys" do
     strategy = mock
-    strategy.expects(:performed_participant_trade).with do |options|
+    strategy.expects(:after_trade).with do |options|
       options[:participant] == @participant &&
         options[:stock].symbol == @stock.symbol &&
         options[:price] == @stock.price &&
@@ -64,7 +64,7 @@ class MarketTest < Test::Unit::TestCase
     @participant.buy(@stock, 2)
   end
 
-  test "a strategy doesn't have to subscribe to performed_participant_trade" do
+  test "a strategy doesn't have to subscribe to after_trade" do
     strategy = mock
     @market.strategies << strategy
     assert_nothing_raised { @participant.sell(@stock, 2) }

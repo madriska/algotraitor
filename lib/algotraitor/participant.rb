@@ -5,14 +5,13 @@ module Algotraitor
   NoShortSelling = Class.new(StandardError)
 
   class Participant
-    include Observable
-
     def initialize(id, name, cash_balance)
       @id = id
       @name = name
       @cash_balance = cash_balance
       @portfolio = Hash.new(0)
       @mutex = Mutex.new
+      @observers = []
     end
 
     attr_reader :id, :name, :cash_balance, :portfolio
@@ -20,6 +19,14 @@ module Algotraitor
     # FIXME: bit of a security hole here
     def valid_password?(password)
       password == 'kittens'
+    end
+
+    def add_observer(observer)
+      @observers << observer
+    end
+
+    def delete_observer(observer)
+      @observers.delete(observer)
     end
 
     def buy(stock, quantity)
@@ -37,12 +44,15 @@ module Algotraitor
           @portfolio[stock] += quantity
         end
 
-        changed
-        notify_observers(:participant => self, 
-                         :stock => stock, 
-                         :time => executed_at, 
-                         :price => stock.price, 
-                         :quantity => quantity)
+        @observers.each do |observer|
+          if observer.respond_to?(:after_trade)
+            observer.after_trade(:participant => self, 
+                                 :stock => stock, 
+                                 :time => executed_at, 
+                                 :price => stock.price, 
+                                 :quantity => quantity)
+          end
+        end
       end
 
       {:price_per_share => execution_price,
@@ -64,12 +74,15 @@ module Algotraitor
           @cash_balance += sale_price
         end
 
-        changed
-        notify_observers(:participant => self, 
-                         :stock => stock, 
-                         :time => executed_at, 
-                         :price => stock.price, 
-                         :quantity => -quantity)
+        @observers.each do |observer|
+          if observer.respond_to?(:after_trade)
+            observer.after_trade(:participant => self, 
+                                 :stock => stock, 
+                                 :time => executed_at, 
+                                 :price => stock.price, 
+                                 :quantity => -quantity)
+          end
+        end
       end
 
       {:price_per_share => execution_price,

@@ -3,7 +3,6 @@ Dir['vendor/*'].each do |dir|
 end
 
 require 'roxy'
-require 'observer_proxy'
 
 module Algotraitor
 
