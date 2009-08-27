@@ -26,7 +26,6 @@ module Algotraitor
           end
         end
         average_execution_price = total_execution_price / quantity.abs
-        puts "#{quantity} shares at #{options[:price]}, avg = #{average_execution_price}"
 
         {:price => average_execution_price}
       end
