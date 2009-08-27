@@ -37,6 +37,11 @@ module Algotraitor
        'portfolio'    => portfolio}.to_json
     end
 
+    get '/trade_history.json' do
+      content_type 'application/json'
+      Algotraitor::Extension::TradeHistory.to_json
+    end
+
     post '/buy/:symbol/:quantity' do |symbol, quantity|
       content_type 'application/json'
       stock = market.stocks[symbol]

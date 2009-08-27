@@ -10,6 +10,7 @@ market.participants << Algotraitor::Participant.new(1, 'Brad', 1000.00)
 
 # TODO: add extensions here. Starting with a quiescent market for testing.
 #market.extensions << Algotraitor::Extension::PriceBumper
+market.extensions << Algotraitor::Extension::TradeHistory
 
 Algotraitor::Server.market = market
 
