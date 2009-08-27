@@ -34,39 +34,39 @@ class MarketTest < Test::Unit::TestCase
     assert_equal @stock.price, @market.stock_prices[@stock.symbol]
   end
 
-  test "Plugging a Strategy into a market informs it of price changes" do
-    strategy = mock
-    strategy.expects(:after_price_change).with do |options|
+  test "Plugging an extension into a market informs it of price changes" do
+    extension = mock
+    extension.expects(:after_price_change).with do |options|
       options[:stock] == @stock &&
         options[:new_price] == options[:old_price] + 1.0
     end
-    @market.strategies << strategy
+    @market.extensions << extension
 
     @stock.price += 1.0
   end
 
-  test "a strategy doesn't have to subscribe to after_price_change" do
-    strategy = mock
-    @market.strategies << strategy
+  test "an extension doesn't have to subscribe to after_price_change" do
+    extension = mock
+    @market.extensions << extension
     assert_nothing_raised { @stock.price += 1.0 }
   end
 
-  test "Strategies plugged into the market are informed of buys" do
-    strategy = mock
-    strategy.expects(:after_trade).with do |options|
+  test "extensions plugged into the market are informed of buys" do
+    extension = mock
+    extension.expects(:after_trade).with do |options|
       options[:participant] == @participant &&
         options[:stock].symbol == @stock.symbol &&
         options[:price] == @stock.price &&
         options[:quantity] == 2
     end
-    @market.strategies << strategy
+    @market.extensions << extension
 
     @participant.buy(@stock, 2)
   end
 
-  test "a strategy doesn't have to subscribe to after_trade" do
-    strategy = mock
-    @market.strategies << strategy
+  test "an extension doesn't have to subscribe to after_trade" do
+    extension = mock
+    @market.extensions << extension
     assert_nothing_raised { @participant.sell(@stock, 2) }
   end
 

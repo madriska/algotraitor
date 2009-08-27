@@ -1,5 +1,5 @@
 module Algotraitor
-  module Strategy
+  module Extension
     # Bumps the price up / down to simulate market activity of supply and demand
     module PriceBumper
       extend self

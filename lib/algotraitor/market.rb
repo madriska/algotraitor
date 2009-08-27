@@ -8,10 +8,10 @@ module Algotraitor
     def initialize
       @stocks = {}
       @participants = {}
-      @strategies = []
+      @extensions = []
     end
 
-    attr_reader :stocks, :participants, :strategies
+    attr_reader :stocks, :participants, :extensions
 
     def authenticate(id, password)
       (p = @participants[id.to_i]) && p.valid_password?(password)
@@ -31,9 +31,9 @@ module Algotraitor
 
     # Called when a stock price is updated.
     def after_price_change(options)
-      @strategies.each do |strategy|
-        if strategy.respond_to?(:after_price_change)
-          strategy.after_price_change(options)
+      @extensions.each do |extension|
+        if extension.respond_to?(:after_price_change)
+          extension.after_price_change(options)
         end
       end
     end
@@ -51,9 +51,9 @@ module Algotraitor
 
     # Called to notify the Market when a market participant performs a trade.
     def after_trade(options)
-      @strategies.each do |strategy|
-        if strategy.respond_to?(:after_trade)
-          strategy.after_trade(options)
+      @extensions.each do |extension|
+        if extension.respond_to?(:after_trade)
+          extension.after_trade(options)
         end
       end
     end
