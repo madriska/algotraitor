@@ -31,4 +31,4 @@ stocks:
     price: 20.00
 
 server:
-  port: 31337
+  port: 1111
