@@ -1,0 +1,49 @@
+-- Service endpoints (see Example Transcript for usage)
+
+- GET /stocks.json
+  Returns a JSON object mapping stock symbols to their current price quotes.
+
+- GET /account.json
+  JSON object giving information about your current holdings and cash balance.
+
+- GET /trade_history.json
+  Returns all trading history of *all* participants. 
+
+- POST /buy/:symbol/:quantity
+  POST /sell/:symbol/:quantity
+  Buys (sells) the given quantity of stock at the market price. The order may
+  not execute at the price quoted; beware!
+
+-- HTTP authentication
+
+Use Basic authentication; your username is your participant ID, and your
+password has been assigned.
+
+-- Example transcript
+
+* GET /stocks.json
+{"ABC":10.0}
+
+* GET /account.json
+{"portfolio":{},"cash_balance":1000.0}
+
+* POST /buy/ABC/5
+{"executed_at":125134790376,"price_per_share":10.0}
+
+* POST /buy/ABC/10
+{"executed_at":125134790570,"price_per_share":10.0}
+
+* GET /account.json
+{"portfolio":{"ABC":15},"cash_balance":850.0}
+
+* POST /sell/ABC/15
+{"executed_at":125134791325,"price_per_share":10.0}
+
+* GET /account.json
+{"portfolio":{},"cash_balance":1000.0}
+
+* GET /trade_history.json
+[{"participant_id":1,"price":10.0,"time":125134790376,"quantity":5,"stock":"ABC"},
+ {"participant_id":1,"price":10.0,"time":125134790570,"quantity":10,"stock":"ABC"},
+ {"participant_id":1,"price":10.0,"time":125134791325,"quantity":-15,"stock":"ABC"}]
+
