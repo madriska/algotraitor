@@ -1,0 +1,13 @@
+participants:
+  1:
+    # password: e27e3bcc
+    name: Blue Team
+    cash_balance: 1000.00
+  2:
+    # password: e7fedc06
+    name: Red Team
+    cash_balance: 1000.00
+
+stocks:
+  ABC:
+    price: 10.00
