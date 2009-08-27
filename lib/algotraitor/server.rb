@@ -38,16 +38,16 @@ module Algotraitor
     end
 
     post '/buy/:symbol/:quantity' do |symbol, quantity|
+      content_type 'application/json'
       stock = market.stocks[symbol]
-      # body: execution price
       result = participant.buy(stock, quantity.to_i)
       {'price_per_share' => result[:price_per_share],
        'executed_at'     => result[:executed_at]}.to_json
     end
 
     post '/sell/:symbol/:quantity' do |symbol, quantity|
+      content_type 'application/json'
       stock = market.stocks[symbol]
-      # body: execution price
       result = participant.sell(stock, quantity.to_i)
       {'price_per_share' => result[:price_per_share],
        'executed_at'     => result[:executed_at]}.to_json
