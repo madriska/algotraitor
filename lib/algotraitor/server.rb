@@ -30,7 +30,7 @@ module Algotraitor
     get '/account.json' do
       content_type 'application/json'
       portfolio = participant.portfolio.inject({}) do |hash, (stock, quantity)|
-        hash[stock.symbol] = quantity
+        hash[stock.symbol] = quantity unless quantity.zero?
         hash
       end
       {'cash_balance' => participant.cash_balance,
