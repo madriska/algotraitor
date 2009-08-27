@@ -1,12 +1,21 @@
 require 'rubygems'
+require 'yaml'
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'algotraitor'
 
-# TODO: replace with seed data
+config = YAML.load_file('config.yaml')
+
 market = Algotraitor::Market.new
-market.stocks << Algotraitor::Stock.new('ABC', 10.00)
-market.participants << Algotraitor::Participant.new(1, 'Brad', 1000.00)
+
+config['stocks'].each do |symbol, stock|
+  market.stocks << Algotraitor::Stock.new(symbol, stock['price'])
+end
+
+config['participants'].each do |id, participant|
+  market.participants << Algotraitor::Participant.new(id, 
+                           participant['name'], participant['cash_balance'])
+end
 
 # TODO: add extensions here. Starting with a quiescent market for testing.
 #market.extensions << Algotraitor::Extension::PriceBumper

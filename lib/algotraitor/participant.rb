@@ -1,3 +1,4 @@
+require 'digest/sha2'
 require 'thread'
 
 module Algotraitor
@@ -16,9 +17,13 @@ module Algotraitor
 
     attr_reader :id, :name, :cash_balance, :portfolio
 
-    # FIXME: bit of a security hole here
     def valid_password?(password)
-      password == 'kittens'
+      password == calculate_password
+    end
+
+    Secret = "sR5^YFysrOC4H>H"
+    def calculate_password
+      Digest::SHA2.hexdigest("#{@id}-#{Secret}")[0,8]
     end
 
     def add_observer(observer)
