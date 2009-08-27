@@ -16,6 +16,6 @@ require 'algotraitor/stock'
 require 'algotraitor/market'
 require 'algotraitor/participant'
 require 'algotraitor/server'
-Dir[File.join(File.dirname(__FILE__), %w[algotraitor strategy *.rb])].each { |f| 
+Dir[File.join(File.dirname(__FILE__), %w[algotraitor extension *.rb])].each { |f| 
   load f }
 
