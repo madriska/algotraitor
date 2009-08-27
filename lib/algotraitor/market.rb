@@ -49,6 +49,17 @@ module Algotraitor
       end
     end
 
+    def before_trade(options)
+      price = options[:price]
+      @extensions.each do |extension|
+        if extension.respond_to?(:before_trade)
+          result = extension.before_trade(options)
+          price = result.delete(:price) || price
+        end
+      end
+      {:price => price}
+    end
+
     # Called to notify the Market when a market participant performs a trade.
     def after_trade(options)
       @extensions.each do |extension|

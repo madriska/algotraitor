@@ -90,7 +90,7 @@ module Algotraitor
                                # Price may have been modified by another
                                # observer, so use the current value.
                                :price => execution_price, 
-                               :quantity => quantity)
+                               :quantity => -quantity)
           # If we got a price back, use that as the new price
           execution_price = result.delete(:price) || execution_price
         end
