@@ -22,6 +22,13 @@ module Algotraitor
       market.participants[env['REMOTE_USER'].to_i]
     end
 
+    get '/seekrit/balances' do
+      content_type 'text/plain'
+      "Cash:\n" +
+      market.participant_summary.map{|p, s|
+        "#{p.name} (#{p.id}): #{s[:cash]} cash, #{s[:stock]} stock, #{s[:total]} total"}.join("\n")
+    end
+
     get '/stocks.json' do
       content_type 'application/json'
       market.stock_prices.to_json

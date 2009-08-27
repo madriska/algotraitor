@@ -77,6 +77,18 @@ module Algotraitor
       end
     end
 
+    def participant_summary
+      @participants.inject({}) do |hash, (id, participant)|
+        cash = participant.cash_balance
+        stock = participant.portfolio.inject(0) do |sum, (portfolio_stock, quantity)|
+          sum + (@stocks[portfolio_stock.symbol].price * quantity)
+        end
+        hash[participant] = {:cash => cash, :stock => stock, 
+          :total => cash + stock}
+        hash
+      end
+    end
+
 
 
   end

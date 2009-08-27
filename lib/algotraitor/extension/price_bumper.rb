@@ -37,15 +37,15 @@ module Algotraitor
 
         stock.synchronize do
           stock.price *= (vfactor ** quantity)
+          stock.price += ((rand() - 0.5) * 0.10 * stock.price)
         end
       end
 
       protected
 
       # The factor by which buys / sells scale the stock price (per share).
-      # TODO: this could become dependent on the stock.
       def volume_factor(stock)
-        1.01
+        1.01 + (rand() * 0.0001 * stock.price) + (rand() * 0.0005)
       end
 
     end

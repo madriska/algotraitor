@@ -11,6 +11,14 @@ participants:
 stocks:
   ABC:
     price: 10.00
+  DEF:
+    price: 8.00
+  XYZ:
+    price: 5.12
+  PI:
+    price: 3.14
+  ADM:
+    price: 42.00
 
 server:
-  port: 31337
+  port: 1111
