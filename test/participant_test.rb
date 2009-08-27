@@ -77,6 +77,27 @@ class ParticipantTest < Test::Unit::TestCase
       @participant.delete_observer(watcher)
     end
 
+    test "can use before_trade to modify execution price" do
+      watcher = mock
+      watcher.expects(:before_trade).returns(:price => 5.00)
+
+      @participant.add_observer(watcher)
+      balance = @participant.cash_balance
+      @participant.buy(@stock, 1)
+      assert_equal @participant.cash_balance, balance - 5.00
+      @participant.delete_observer(watcher)
+    end
+
+    test "balance modified in before_trade will overdraw if greater than cash balance" do
+      watcher = mock
+      watcher.expects(:before_trade).returns(:price => 
+        @participant.cash_balance + 100.00)
+
+      @participant.add_observer(watcher)
+      assert_raises(Algotraitor::Overdrawn) { @participant.buy(@stock, 1) }
+      @participant.delete_observer(watcher)
+    end
+
   end
 
 end

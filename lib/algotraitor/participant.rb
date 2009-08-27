@@ -31,6 +31,21 @@ module Algotraitor
 
     def buy(stock, quantity)
       execution_price = stock.price
+
+      # Invoke before_trade callbacks and allow them to modify the price.
+      @observers.each do |observer|
+        if observer.respond_to?(:before_trade)
+          result = observer.before_trade(:participant => self, 
+                               :stock => stock, 
+                               # Price may have been modified by another
+                               # observer, so use the current value.
+                               :price => execution_price, 
+                               :quantity => quantity)
+          # If we got a price back, use that as the new price
+          execution_price = result.delete(:price) || execution_price
+        end
+      end
+
       purchase_price = execution_price * quantity
       raise ArgumentError, "Quantity must be nonnegative" if quantity < 0
       raise Overdrawn if purchase_price > @cash_balance
@@ -49,7 +64,7 @@ module Algotraitor
             observer.after_trade(:participant => self, 
                                  :stock => stock, 
                                  :time => executed_at, 
-                                 :price => stock.price, 
+                                 :price => execution_price,
                                  :quantity => quantity)
           end
         end
@@ -61,6 +76,21 @@ module Algotraitor
 
     def sell(stock, quantity)
       execution_price = stock.price
+
+      # Invoke before_trade callbacks and allow them to modify the price.
+      @observers.each do |observer|
+        if observer.respond_to?(:before_trade)
+          result = observer.before_trade(:participant => self, 
+                               :stock => stock, 
+                               # Price may have been modified by another
+                               # observer, so use the current value.
+                               :price => execution_price, 
+                               :quantity => quantity)
+          # If we got a price back, use that as the new price
+          execution_price = result.delete(:price) || execution_price
+        end
+      end
+
       sale_price = execution_price * quantity
       raise ArgumentError, "Quantity must be nonnegative" if quantity < 0
       raise NoShortSelling if @portfolio[stock] < quantity
@@ -79,7 +109,7 @@ module Algotraitor
             observer.after_trade(:participant => self, 
                                  :stock => stock, 
                                  :time => executed_at, 
-                                 :price => stock.price, 
+                                 :price => execution_price, 
                                  :quantity => -quantity)
           end
         end
