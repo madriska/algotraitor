@@ -4,7 +4,11 @@ require 'yaml'
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'algotraitor'
 
-config = YAML.load_file('config.yaml')
+config = YAML.load_file(ARGV.first || 'config.yaml')
+
+config['server'].each do |k, v|
+  Algotraitor::Server.set k.to_sym, v
+end
 
 market = Algotraitor::Market.new
 
